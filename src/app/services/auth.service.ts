@@ -2,12 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-
-export interface User {
-  id: number;
-  username: string;
-  online: boolean;
-}
+import { User } from '../models/user.model';
 
 export interface LoginRequest {
   username: string;
@@ -27,7 +22,7 @@ export interface AuthResponse {
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  
+
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -60,20 +55,15 @@ export class AuthService {
   }
 
   logout(): void {
-    // Call logout endpoint if needed
     this.http.post(`${this.API_URL}/logout`, {}).subscribe();
 
-    // Clear local storage
     localStorage.removeItem('currentUser');
     localStorage.removeItem('authToken');
     this.currentUserSubject.next(null);
-    
+
     this.router.navigate(['/login']);
   }
 
-    /**
-   * Auto-login using stored credentials
-   */
   autoLogin(): void {
     const userData = localStorage.getItem('currentUser');
     if (userData) {
@@ -81,12 +71,6 @@ export class AuthService {
         const user = JSON.parse(userData);
         this.currentUserSubject.next(user);
         console.log('Auto-login successful for user:', user.username);
-        
-        // Optional: Validate token with backend (uncomment if needed)
-        // this.validateToken().subscribe({
-        //   error: () => this.logout()
-        // });
-        
       } catch (error) {
         console.error('Error during auto-login:', error);
         this.logout();
@@ -110,11 +94,11 @@ export class AuthService {
     if (response.user) {
       this.currentUserSubject.next(response.user);
       localStorage.setItem('currentUser', JSON.stringify(response.user));
-      
+
       if (response.token) {
         localStorage.setItem('authToken', response.token);
       }
-      
+
       this.router.navigate(['/lobby']);
     }
   }

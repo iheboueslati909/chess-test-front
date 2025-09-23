@@ -16,7 +16,7 @@
     <ul>
       <li *ngFor="let u of users">
         <span>{{ u.username }} <small *ngIf="!u.online">(offline)</small></span>
-        <button (click)="invite(u)" [disabled]="!u.online">Invite</button>
+        <!-- <button (click)="invite(u)" [disabled]="!u.online">Invite</button> -->
       </li>
     </ul>
   </ng-template> 
