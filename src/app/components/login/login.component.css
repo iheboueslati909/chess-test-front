@@ -1,6 +1,7 @@
 :host { display: block; padding: 1rem; }
 .login-container {
-	max-width: 380px;
+	max-width: 420px;
+	width: 100%;
 	margin: 2rem auto;
 	padding: 1rem 1.2rem;
 	border-radius: 8px;
@@ -37,3 +38,10 @@ button {
 	cursor: pointer;
 }
 button:hover { opacity: 0.95; }
+
+/* Links inside the login card */
+.login-container p { margin-top: 1rem; color: #dfeff0; }
+.login-container a { color: #7ee8fa; text-decoration: underline; cursor: pointer; }
+
+/* Input focus state */
+input:focus { outline: none; box-shadow: 0 0 0 3px rgba(126,232,250,0.12); border-color: rgba(126,232,250,0.6); }
