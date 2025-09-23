@@ -5,7 +5,15 @@ import { WebsocketService } from '../../services/websocket.service';
 import { User } from '../../models/user.model';
 import { Subscription } from 'rxjs';
 
+export interface GameInvitation {
+  id: number;
+  fromUser: User;
+  toUser: User;
+  status: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'CANCELLED';
+}
+
 @Component({
+    selector: 'app-lobby',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './lobby.component.html',
@@ -14,7 +22,9 @@ import { Subscription } from 'rxjs';
 export class LobbyComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   users: User[] = [];
-  loading = true; // start loading
+  pendingInvitations: GameInvitation[] = [];
+  loading = true;
+
   private subscription = new Subscription();
 
   constructor(
@@ -24,29 +34,42 @@ export class LobbyComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Reactively get current user
+    // Subscribe to current user changes
     this.subscription.add(
       this.auth.currentUser$.subscribe(user => {
         this.currentUser = user;
+
+        // Re-filter users whenever currentUser changes
+        const latestUsers = this.ws.getOnlineUsersUpdates() as any; // BehaviorSubject hack
+        if (latestUsers._value) {
+            this.users = (latestUsers._value as User[]).filter((u: User) => u.id !== this.currentUser!.id);
+        }
       })
     );
 
-    // Subscribe to real-time users updates
+    // Subscribe to online users updates
     this.subscription.add(
       this.ws.getOnlineUsersUpdates().subscribe(users => {
-        if (!this.currentUser) {
-          this.users = users ?? [];
-        } else {
-          // Filter out current user
+        if (this.currentUser) {
           this.users = (users ?? []).filter(u => u.id !== this.currentUser!.id);
+        } else {
+          this.users = users ?? [];
         }
 
         if (this.loading) this.loading = false;
-
         try { this.cdr.detectChanges(); } catch {}
       })
     );
 
+    this.subscription.add(
+      this.ws.getInvitationsUpdates().subscribe(invitations => {
+        this.pendingInvitations = invitations.filter(inv => 
+          inv.status === 'PENDING' && inv.toUser.id === this.currentUser!.id
+        );
+        console.log('📬 Updated pending invitations:', this.pendingInvitations);
+        try { this.cdr.detectChanges(); } catch {}
+      })
+    );
 
     // Safety fallback: stop loading after 5s
     setTimeout(() => {
@@ -59,17 +82,28 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-    // Optional: WebSocket disconnect handled globally in service
   }
 
   logout(): void {
     this.auth.logout();
-    // WebSocket service will auto-send disconnect if currentUser$ becomes null
+    // Websocket auto-send disconnect via currentUser$ subscription
   }
 
-  // Uncomment if invitation feature is needed
-  // invite(user: User): void {
-  //   this.ws.sendInvitation(user.id);
-  //   alert(`Invitation sent to ${user.username}`);
-  // }
+  // Optional: invitation logic
+  invite(user: User): void {
+    this.ws.sendInvitation(user.id);
+    alert(`Invitation sent to ${user.username}`);
+  }
+
+  acceptInvitation(invite: GameInvitation): void {
+    // Call backend API to accept invitation
+    // Redirect to /game after success
+    console.log('Accepted invitation', invite);
+    // Example: this.router.navigate(['/game', invite.id]);
+  }
+
+  declineInvitation(invite: GameInvitation): void {
+    // Call backend API to decline invitation
+    console.log('Declined invitation', invite);
+  }
 }

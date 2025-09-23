@@ -1,5 +1,156 @@
-:host { display:block; padding:1rem }
-.lobby header { display:flex; justify-content:space-between; align-items:center }
-.lobby ul { list-style:none; padding:0 }
-.lobby li { display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid #eee }
-.lobby button { margin-left: 0.5rem }
+/* Lobby container */
+.lobby {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  color: #f0f0f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.lobby-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #444;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.lobby-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  letter-spacing: 0.4px;
+  background: linear-gradient(90deg, #a8ff78 0%, #78ffd6 50%, #7ee8fa 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.lobby-header .user-info strong {
+  color: #fff;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logout-btn {
+  background: #ff4d4d;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.logout-btn:hover {
+  background: #e63939;
+}
+
+/* Main content */
+.lobby-main {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+/* Online players */
+.online-players {
+  background: #2a2a3d;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+}
+
+.online-players ul {
+  list-style: none;
+  padding: 0;
+}
+
+.online-players li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+  margin-bottom: 0.4rem;
+  background: #33334d;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.online-players li:hover {
+  background: #3d3d5a;
+}
+
+.invite-btn {
+  background: #4caf50;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.invite-btn:disabled {
+  background: #777;
+  cursor: not-allowed;
+}
+.invite-btn:hover:not(:disabled) {
+  background: #45a049;
+}
+
+/* Pending Invitations */
+.pending-invitations {
+  background: #2a2a3d;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+}
+
+.pending-invitations ul {
+  list-style: none;
+  padding: 0;
+}
+
+.pending-invitations li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: #33334d;
+  border-radius: 6px;
+}
+
+.invitation-actions button {
+  margin-left: 0.3rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.accept-btn {
+  background: #4caf50;
+  color: #fff;
+}
+.accept-btn:hover {
+  background: #45a049;
+}
+.decline-btn {
+  background: #ff4d4d;
+  color: #fff;
+}
+.decline-btn:hover {
+  background: #e63939;
+}
+
+/* Empty states and loading */
+.loading, .empty {
+  font-style: italic;
+  color: #ccc;
+}

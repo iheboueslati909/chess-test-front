@@ -10,8 +10,6 @@ import { AuthService } from './services/auth.service';
   template: `
     <div class="app-container">
       <header *ngIf="isAuthenticated()" class="app-header">
-        <h1>Chess App</h1>
-        <button (click)="logout()">Logout</button>
       </header>
       <main>
         <router-outlet></router-outlet>

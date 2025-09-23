@@ -1,25 +1,49 @@
 <div class="lobby">
-  <header>
+  <header class="lobby-header">
     <h2>Lobby</h2>
-    <div class="user-info">Logged in as: <strong>{{ currentUser?.username }}</strong>
-      <button (click)="logout()">Logout</button>
+    <div class="user-info">
+      <span>Logged in as: <strong>{{ currentUser?.username }}</strong></span>
+      <button class="logout-btn" (click)="logout()">Logout</button>
     </div>
   </header>
 
-<section>
-  <h3>Online Players</h3>
-  <ng-container *ngIf="loading; else usersList">
-    <div>Loading players...</div>
-  </ng-container>
+  <main class="lobby-main">
+    <!-- Pending Invitations - Show even when empty -->
+    <section class="pending-invitations" *ngIf="pendingInvitations && pendingInvitations.length > 0">
+      <h3>Pending Invitations</h3>
+      <ul>
+        <li *ngFor="let invite of pendingInvitations">
+          <span>From: <strong>{{ invite.fromUser.username }}</strong></span>
+          <div class="invitation-actions">
+            <button class="accept-btn" (click)="acceptInvitation(invite)">Accept</button>
+            <button class="decline-btn" (click)="declineInvitation(invite)">Decline</button>
+          </div>
+        </li>
+      </ul>
+    </section>
 
-  <ng-template #usersList>
-    <ul>
-      <li *ngFor="let u of users">
-        <span>{{ u.username }} <small *ngIf="!u.online">(offline)</small></span>
-        <!-- <button (click)="invite(u)" [disabled]="!u.online">Invite</button> -->
-      </li>
-    </ul>
-  </ng-template> 
-</section>
+    <!-- Show message when no pending invitations -->
+    <section class="no-invitations" *ngIf="pendingInvitations && pendingInvitations.length === 0">
+      <h3>No Pending Invitations</h3>
+      <p>You'll see invitations here when other players invite you to a game.</p>
+    </section>
 
+    <!-- Online Players -->
+    <section class="online-players">
+      <h3>Online Players ({{ users.length }})</h3>
+      <ng-container *ngIf="loading; else usersList">
+        <div class="loading">Loading players...</div>
+      </ng-container>
+
+      <ng-template #usersList>
+        <ul>
+          <li *ngFor="let u of users">
+            <span>{{ u.username }}</span>
+            <button class="invite-btn" (click)="invite(u)">Invite to Game</button>
+          </li>
+        </ul>
+        <div *ngIf="users.length === 0" class="empty">No other players online</div>
+      </ng-template>
+    </section>
+  </main>
 </div>
