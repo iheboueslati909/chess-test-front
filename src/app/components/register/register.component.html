@@ -1,0 +1,37 @@
+<div class="register-container">
+	<h2>Register</h2>
+
+	<form (ngSubmit)="submit()" [formGroup]="registerForm" novalidate>
+		<label>
+			Username
+			<input formControlName="username" />
+		</label>
+		<div class="error" *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.invalid">
+			Username is required (min 3 chars).
+		</div>
+
+		<label>
+			Password
+			<input type="password" formControlName="password" />
+		</label>
+		<div class="error" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+			Password is required (min 6 chars).
+		</div>
+
+		<label>
+			Confirm Password
+			<input type="password" formControlName="confirm" />
+		</label>
+			<div class="error" *ngIf="registerForm.errors?.['mismatch'] && registerForm.get('confirm')?.touched">
+			Passwords do not match.
+		</div>
+
+		<div class="error" *ngIf="error">{{ error }}</div>
+
+		<button type="submit" [disabled]="loading">{{ loading ? 'Registering...' : 'Register' }}</button>
+	</form>
+
+	<p>
+		Already have an account? <a routerLink="/login">Login</a>
+	</p>
+</div>

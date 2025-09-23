@@ -1,0 +1,25 @@
+<div class="lobby">
+  <header>
+    <h2>Lobby</h2>
+    <div class="user-info">Logged in as: <strong>{{ currentUser?.username }}</strong>
+      <button (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+<section>
+  <h3>Online Players</h3>
+  <ng-container *ngIf="loading; else usersList">
+    <div>Loading players...</div>
+  </ng-container>
+
+  <ng-template #usersList>
+    <ul>
+      <li *ngFor="let u of users">
+        <span>{{ u.username }} <small *ngIf="!u.online">(offline)</small></span>
+        <button (click)="invite(u)" [disabled]="!u.online">Invite</button>
+      </li>
+    </ul>
+  </ng-template> 
+</section>
+
+</div>

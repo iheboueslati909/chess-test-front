@@ -1,0 +1,29 @@
+<div class="login-container">
+	<h2>Login</h2>
+
+	<form (ngSubmit)="submit()" [formGroup]="loginForm" novalidate>
+		<label>
+			Username
+			<input formControlName="username" />
+		</label>
+		<div class="error" *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid">
+			Username is required (min 3 chars).
+		</div>
+
+		<label>
+			Password
+			<input type="password" formControlName="password" />
+		</label>
+		<div class="error" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+			Password is required.
+		</div>
+
+		<div class="error" *ngIf="error">{{ error }}</div>
+
+		<button type="submit" [disabled]="loading">{{ loading ? 'Logging in...' : 'Login' }}</button>
+	</form>
+
+	<p>
+		Don't have an account? <a routerLink="/register">Register</a>
+	</p>
+</div>

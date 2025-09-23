@@ -1,0 +1,5 @@
+:host { display:block; padding:1rem }
+.lobby header { display:flex; justify-content:space-between; align-items:center }
+.lobby ul { list-style:none; padding:0 }
+.lobby li { display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid #eee }
+.lobby button { margin-left: 0.5rem }
